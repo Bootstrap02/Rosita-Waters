@@ -112,12 +112,25 @@ export function StoreProvider({ children }) {
             ? {
                 footerAddress: footer.address,
                 footerEmail: footer.email,
-                socials: {
-                  facebook: footer.facebook || "",
-                  instagram: footer.instagram || "",
-                  x: footer.x || "",
-                  tiktok: footer.tiktok || "",
-                },
+                // only include socials that actually have a link, so empty
+                // footer fields don't hide the ones saved in the site settings
+                ...(Object.values({
+                  facebook: footer.facebook,
+                  instagram: footer.instagram,
+                  x: footer.x,
+                  tiktok: footer.tiktok,
+                }).some(Boolean)
+                  ? {
+                      socials: Object.fromEntries(
+                        Object.entries({
+                          facebook: footer.facebook,
+                          instagram: footer.instagram,
+                          x: footer.x,
+                          tiktok: footer.tiktok,
+                        }).filter(([, url]) => url)
+                      ),
+                    }
+                  : {}),
               }
             : {}),
         });
@@ -353,3 +366,4 @@ export function useStore() {
   if (!ctx) throw new Error("useStore must be used inside StoreProvider");
   return ctx;
 }
+
