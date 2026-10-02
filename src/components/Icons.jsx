@@ -1,3 +1,4 @@
+
 export function BrandMark({ size = 40 }) {
   return (
     <svg viewBox="0 0 60 72" width={size} height={(size * 72) / 60} aria-hidden="true">
@@ -94,7 +95,7 @@ const SOCIAL_PATHS = {
 export function SocialLinks({ socials, className = '' }) {
   return (
     <div className={'socials ' + className}>
-      {Object.entries(socials).map(([name, url]) => (
+      {Object.entries(socials || {}).filter(([, url]) => url).map(([name, url]) => (
         <a key={name} href={url} target="_blank" rel="noopener" aria-label={name}>
           <svg
             viewBox="0 0 24 24"
