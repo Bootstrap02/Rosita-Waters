@@ -1,3 +1,4 @@
+
 import {
   createContext,
   useCallback,
@@ -237,7 +238,9 @@ export function StoreProvider({ children }) {
     return (
       `Hello ${siteConfig.brand}, I would like to order:\n${lines}\n` +
       (siteConfig.showPrices ? `Estimated total: ${fmt(cartTotal(), siteConfig)}\n` : "") +
-      `\nName: ${customer.name || ""}\nPhone: ${customer.phone || ""}\n${
+      `\nName: ${customer.name || ""}\nPhone: ${customer.phone || ""}${
+        customer.email ? `\nEmail: ${customer.email}` : ""
+      }\n${
         customer.mode === "pickup"
           ? "Pickup"
           : `Delivery address: ${customer.addr || ""}`
@@ -366,4 +369,3 @@ export function useStore() {
   if (!ctx) throw new Error("useStore must be used inside StoreProvider");
   return ctx;
 }
-
