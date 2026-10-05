@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { fmt, phoneIntl, waLink } from '../data/config.js';
@@ -76,10 +77,11 @@ function ListStep() {
 }
 
 function DetailsStep() {
-  const { customer, setCustomer, setDrawerStep, showToast } = useStore();
+  const { customer, setCustomer, setDrawerStep, showToast, siteConfig } = useStore();
   const [form, setForm] = useState({
     name: customer.name || '',
     phone: customer.phone || '',
+    email: customer.email || '',
     mode: customer.mode || 'delivery',
     addr: customer.addr || '',
     note: customer.note || '',
@@ -97,9 +99,14 @@ function DetailsStep() {
       showToast('Add a delivery address');
       return;
     }
+    if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+      showToast('That email address does not look right');
+      return;
+    }
     setCustomer({
       name: form.name.trim(),
       phone: form.phone.trim(),
+      email: form.email.trim(),
       mode: form.mode,
       addr: form.addr.trim(),
       note: form.note.trim(),
@@ -121,6 +128,16 @@ function DetailsStep() {
         <label>
           Phone number
           <input value={form.phone} onChange={set('phone')} inputMode="tel" autoComplete="tel" />
+        </label>
+        <label>
+          Email address (optional)
+          <input
+            type="email"
+            value={form.email}
+            onChange={set('email')}
+            inputMode="email"
+            autoComplete="email"
+          />
         </label>
         <label>
           Delivery or pickup
@@ -169,6 +186,7 @@ function SendStep() {
           customer: {
             name: customer.name,
             phone: customer.phone,
+            email: customer.email || undefined,
             mode: customer.mode,
             address: customer.addr,
             note: customer.note,
